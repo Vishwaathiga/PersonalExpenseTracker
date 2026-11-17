@@ -80,6 +80,7 @@ builder.Services.AddCors(options =>
 
 // Register authentication service
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProfileService, ProfileService>();
 
 // Register controllers and OpenAPI
 builder.Services.AddControllers();

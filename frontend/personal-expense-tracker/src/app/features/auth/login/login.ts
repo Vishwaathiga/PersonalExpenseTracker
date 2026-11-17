@@ -1,6 +1,7 @@
 
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import {
   FormBuilder,
   ReactiveFormsModule,
@@ -20,6 +21,7 @@ import { Auth } from '../../../services/auth';
 export class Login {
   private fb = inject(FormBuilder);
   private authService = inject(Auth);
+  private router = inject(Router);
 
   successMessage = '';
   errorMessage = '';
@@ -53,6 +55,7 @@ export class Login {
         sessionStorage.setItem('email', response.email);
 
         this.successMessage = `Welcome, ${response.fullName}! Login successful.`;
+        this.router.navigate(['/profile']);
         this.loginForm.reset();
         this.isLoading = false;
       },
