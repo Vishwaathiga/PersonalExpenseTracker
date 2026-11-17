@@ -1,0 +1,149 @@
+
+<div class="budget-container">
+
+  <div class="budget-card">
+
+    <h1>Budget Management</h1>
+    <p class="subtitle">Manage and monitor your monthly spending</p>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <div class="month-selection">
+      <label for="budgetMonth">Select Month</label>
+      <input
+        type="month"
+        id="budgetMonth"
+        [(ngModel)]="selectedMonth"
+        (change)="onMonthChange()">
+    </div>
+
+    <div *ngIf="isLoading" class="loading">
+      Loading budget...
+    </div>
+
+    <!-- Create or Edit Budget -->
+    <div *ngIf="!isLoading && (!budget || isEditing)" class="budget-form">
+
+      <h2>{{ budget ? 'Update Monthly Budget' : 'Create Monthly Budget' }}</h2>
+
+      <form [formGroup]="budgetForm" (ngSubmit)="saveBudget()">
+
+        <div class="form-group">
+          <label for="amount">Budget Amount (₹)</label>
+
+          <input
+            type="number"
+            id="amount"
+            formControlName="amount"
+            placeholder="Enter monthly budget"
+            min="0.01"
+            step="0.01">
+
+          <small
+            class="validation-error"
+            *ngIf="budgetForm.get('amount')?.touched &&
+                   budgetForm.get('amount')?.hasError('required')">
+            Budget amount is required.
+          </small>
+
+          <small
+            class="validation-error"
+            *ngIf="budgetForm.get('amount')?.touched &&
+                   budgetForm.get('amount')?.hasError('min')">
+            Budget amount must be greater than zero.
+          </small>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" [disabled]="isLoading">
+            {{ budget ? 'Update Budget' : 'Create Budget' }}
+          </button>
+
+          <button
+            *ngIf="budget"
+            type="button"
+            class="cancel-btn"
+            (click)="cancelEdit()">
+            Cancel
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Existing Budget Details -->
+    <div *ngIf="!isLoading && budget && !isEditing" class="budget-details">
+
+      <h2>Monthly Budget Overview</h2>
+
+      <div class="summary-grid">
+
+        <div class="summary-box">
+          <h3>Budget Amount</h3>
+          <p>₹{{ budget.amount | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="summary-box">
+          <h3>Total Spent</h3>
+          <p>₹{{ budget.totalSpent | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="summary-box">
+          <h3>Remaining Amount</h3>
+          <p>₹{{ budget.remainingAmount | number:'1.2-2' }}</p>
+        </div>
+
+        <div class="summary-box">
+          <h3>Budget Used</h3>
+          <p>{{ budget.percentageUsed | number:'1.0-2' }}%</p>
+        </div>
+
+      </div>
+
+      <div class="progress-section">
+        <h3>Spending Progress</h3>
+
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            [class.exceeded]="budget.isExceeded"
+            [style.width.%]="getPercentage()">
+          </div>
+        </div>
+
+        <p>{{ budget.percentageUsed | number:'1.0-2' }}% of your budget used</p>
+      </div>
+
+      <div
+        *ngIf="budget.isExceeded"
+        class="warning-message">
+        Your expenses have exceeded your monthly budget!
+      </div>
+
+      <div
+        *ngIf="!budget.isExceeded && budget.percentageUsed >= 80"
+        class="notice-message">
+        You are approaching your monthly budget limit.
+      </div>
+
+      <div
+        *ngIf="!budget.isExceeded && budget.percentageUsed < 80"
+        class="success-message">
+        Your spending is within your monthly budget.
+      </div>
+
+      <button class="edit-btn" (click)="editBudget()">
+        Edit Budget
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

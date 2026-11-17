@@ -91,6 +91,8 @@ builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<IReportsRepository, ReportsRepository>();
 builder.Services.AddScoped<IReportsService, ReportsService>();
+builder.Services.AddScoped<IBudgetRepository, BudgetRepository>();
+builder.Services.AddScoped<IBudgetService, BudgetService>();
 // Register controllers and OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();

@@ -6,6 +6,7 @@ import { ExpenseComponent } from './features/expense/expense/expense';
 import { CategoryComponent } from './features/category/category/category';
 import { DashboardComponent } from './features/dashboard/dashboard/dashboard';
 import { ReportsComponent } from './features/reports/reports/reports';
+import { BudgetComponent } from './features/budget/budget/budget';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,10 @@ export const routes: Routes = [
 {
   path: 'reports',
   component: ReportsComponent
+},
+{
+  path: 'budget',
+  component: BudgetComponent
 },
   {
     path: '',

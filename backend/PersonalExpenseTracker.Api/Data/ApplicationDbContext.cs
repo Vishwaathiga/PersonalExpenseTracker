@@ -17,6 +17,7 @@ namespace PersonalExpenseTracker.Api.Data
 
         public DbSet<Category> Categories { get; set; }
 
+        public DbSet<Budget> Budgets { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
@@ -55,6 +56,20 @@ namespace PersonalExpenseTracker.Api.Data
                 .HasOne(c => c.User)
                 .WithMany()
                 .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Budget>()
+    .Property(b => b.Amount)
+    .HasPrecision(12, 2);
+
+            builder.Entity<Budget>()
+                .HasIndex(b => new { b.UserId, b.Year, b.Month })
+                .IsUnique();
+
+            builder.Entity<Budget>()
+                .HasOne(b => b.User)
+                .WithMany()
+                .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
