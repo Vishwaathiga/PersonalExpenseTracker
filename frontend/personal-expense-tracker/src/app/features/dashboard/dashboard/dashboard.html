@@ -1,0 +1,106 @@
+
+<div class="dashboard-container">
+
+  <h1>Dashboard</h1>
+  <p class="subtitle">Your personal expense overview</p>
+
+  <div *ngIf="isLoading" class="message">
+    Loading dashboard...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="dashboard && !isLoading">
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <h3>Total Expenses</h3>
+        <h2>{{ dashboard.totalExpenses | currency:'INR':'symbol' }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <h3>Today's Spending</h3>
+        <h2>{{ dashboard.todayExpenses | currency:'INR':'symbol' }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <h3>This Month</h3>
+        <h2>{{ dashboard.monthlyExpenses | currency:'INR':'symbol' }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <h3>Total Transactions</h3>
+        <h2>{{ dashboard.totalTransactions }}</h2>
+      </div>
+
+    </div>
+
+    <div class="dashboard-section">
+
+      <h2>Category-wise Spending</h2>
+
+      <p *ngIf="dashboard.categorySpending.length === 0">
+        No category spending available.
+      </p>
+
+      <div
+        class="category-item"
+        *ngFor="let category of dashboard.categorySpending">
+
+        <div class="category-info">
+          <strong>{{ category.categoryName }}</strong>
+
+          <strong>
+            {{ category.totalAmount | currency:'INR':'symbol' }}
+          </strong>
+        </div>
+
+        <div class="progress-background">
+          <div
+            class="progress-bar"
+            [style.width.%]="getCategoryPercentage(category.totalAmount)">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="dashboard-section">
+
+      <h2>Recent Expenses</h2>
+
+      <p *ngIf="dashboard.recentExpenses.length === 0">
+        No expenses found.
+      </p>
+
+      <div
+        class="recent-expense"
+        *ngFor="let expense of dashboard.recentExpenses">
+
+        <div>
+          <h3>{{ expense.title }}</h3>
+
+          <p>
+            {{ expense.categoryName || 'Uncategorized' }}
+          </p>
+
+          <small>
+            {{ expense.expenseDate | date:'mediumDate' }}
+          </small>
+        </div>
+
+        <strong>
+          {{ expense.amount | currency:'INR':'symbol' }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -4,6 +4,7 @@ import { Login } from './features/auth/login/login';
 import { Profile } from './features/profile/profile/profile';
 import { ExpenseComponent } from './features/expense/expense/expense';
 import { CategoryComponent } from './features/category/category/category';
+import { DashboardComponent } from './features/dashboard/dashboard/dashboard';
 
 export const routes: Routes = [
   {
@@ -25,6 +26,10 @@ export const routes: Routes = [
    {
   path: 'categories',
   component: CategoryComponent
+},
+{
+  path: 'dashboard',
+  component: DashboardComponent
 },
   {
     path: '',
