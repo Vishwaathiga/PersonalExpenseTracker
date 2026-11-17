@@ -1,0 +1,105 @@
+
+<div class="reports-container">
+
+  <h1>Expense Reports</h1>
+  <p class="subtitle">View and analyse your monthly expenses</p>
+
+  <div class="filter-section">
+    <label for="reportMonth">Select Month</label>
+
+    <input
+      type="month"
+      id="reportMonth"
+      [value]="selectedMonth"
+      (change)="onMonthChange($event)">
+  </div>
+
+  <div *ngIf="isLoading" class="message">
+    Loading report...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="report && !isLoading">
+
+    <div class="summary-grid">
+
+      <div class="summary-card">
+        <h3>Total Spending</h3>
+        <h2>{{ report.totalExpenses | currency:'INR':'symbol' }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <h3>Total Transactions</h3>
+        <h2>{{ report.totalTransactions }}</h2>
+      </div>
+
+    </div>
+
+    <div class="report-section">
+
+      <h2>Category-wise Breakdown</h2>
+
+      <p *ngIf="report.categoryBreakdown.length === 0">
+        No expenses available for this month.
+      </p>
+
+      <div
+        class="category-item"
+        *ngFor="let category of report.categoryBreakdown">
+
+        <div class="category-info">
+          <div>
+            <strong>{{ category.categoryName }}</strong>
+            <small>{{ category.transactionCount }} transactions</small>
+          </div>
+
+          <strong>
+            {{ category.totalAmount | currency:'INR':'symbol' }}
+          </strong>
+        </div>
+
+        <div class="progress-background">
+          <div
+            class="progress-bar"
+            [style.width.%]="getCategoryPercentage(category.totalAmount)">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="report-section">
+
+      <h2>Expense Details</h2>
+
+      <p *ngIf="report.expenses.length === 0">
+        No expenses found for the selected month.
+      </p>
+
+      <div
+        class="expense-item"
+        *ngFor="let expense of report.expenses">
+
+        <div>
+          <h3>{{ expense.title }}</h3>
+
+          <p>{{ expense.categoryName || 'Uncategorized' }}</p>
+
+          <small>{{ expense.expenseDate | date:'mediumDate' }}</small>
+        </div>
+
+        <strong>
+          {{ expense.amount | currency:'INR':'symbol' }}
+        </strong>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
