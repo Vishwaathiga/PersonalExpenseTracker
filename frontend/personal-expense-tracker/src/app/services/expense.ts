@@ -9,6 +9,7 @@ export interface Expense {
   description: string | null;
   expenseDate: string;
   categoryId: number | null;
+  categoryName: string | null;
 }
 
 export interface CreateExpenseRequest {

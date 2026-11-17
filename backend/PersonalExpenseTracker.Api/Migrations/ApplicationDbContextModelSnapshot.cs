@@ -224,6 +224,82 @@ namespace PersonalExpenseTracker.Api.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("PersonalExpenseTracker.Api.Models.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsDefault = true,
+                            Name = "Food"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            IsDefault = true,
+                            Name = "Transportation"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            IsDefault = true,
+                            Name = "Shopping"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDefault = true,
+                            Name = "Healthcare"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            IsDefault = true,
+                            Name = "Education"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            IsDefault = true,
+                            Name = "Bills & Utilities"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            IsDefault = true,
+                            Name = "Entertainment"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            IsDefault = true,
+                            Name = "Others"
+                        });
+                });
+
             modelBuilder.Entity("PersonalExpenseTracker.Api.Models.Expense", b =>
                 {
                     b.Property<int>("Id")
@@ -255,6 +331,8 @@ namespace PersonalExpenseTracker.Api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("UserId");
 
@@ -312,13 +390,30 @@ namespace PersonalExpenseTracker.Api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PersonalExpenseTracker.Api.Models.Category", b =>
+                {
+                    b.HasOne("PersonalExpenseTracker.Api.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PersonalExpenseTracker.Api.Models.Expense", b =>
                 {
+                    b.HasOne("PersonalExpenseTracker.Api.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("PersonalExpenseTracker.Api.Models.ApplicationUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Category");
 
                     b.Navigation("User");
                 });

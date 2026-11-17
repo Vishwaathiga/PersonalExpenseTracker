@@ -143,3 +143,11 @@ button:disabled {
     justify-content: flex-start;
   }
 }
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+  background-color: white;
+}

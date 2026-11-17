@@ -25,15 +25,17 @@ namespace PersonalExpenseTracker.Api.Repositories
         public async Task<List<Expense>> GetAllByUserIdAsync(string userId)
         {
             return await _context.Expenses
-                .Where(e => e.UserId == userId)
-                .OrderByDescending(e => e.ExpenseDate)
-                .ToListAsync();
+     .Include(e => e.Category)
+     .Where(e => e.UserId == userId)
+     .OrderByDescending(e => e.ExpenseDate)
+     .ToListAsync();
         }
 
         public async Task<Expense?> GetByIdAsync(int id, string userId)
         {
             return await _context.Expenses
-                .FirstOrDefaultAsync(e => e.Id == id && e.UserId == userId);
+    .Include(e => e.Category)
+    .FirstOrDefaultAsync(e => e.Id == id && e.UserId == userId);
         }
 
         public async Task<Expense> UpdateAsync(Expense expense)

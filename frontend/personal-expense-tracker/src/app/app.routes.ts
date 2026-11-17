@@ -3,6 +3,7 @@ import { Register } from './features/auth/register/register';
 import { Login } from './features/auth/login/login';
 import { Profile } from './features/profile/profile/profile';
 import { ExpenseComponent } from './features/expense/expense/expense';
+import { CategoryComponent } from './features/category/category/category';
 
 export const routes: Routes = [
   {
@@ -21,9 +22,14 @@ export const routes: Routes = [
     path: 'expenses',
     component: ExpenseComponent
   },
+   {
+  path: 'categories',
+  component: CategoryComponent
+},
   {
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
   }
+ 
 ];

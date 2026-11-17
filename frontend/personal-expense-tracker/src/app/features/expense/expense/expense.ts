@@ -1,3 +1,4 @@
+
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
@@ -11,6 +12,11 @@ import {
   ExpenseService
 } from '../../../services/expense';
 
+import {
+  CategoryService,
+  Category
+} from '../../../services/category';
+
 @Component({
   selector: 'app-expense',
   standalone: true,
@@ -19,10 +25,13 @@ import {
   styleUrl: './expense.css'
 })
 export class ExpenseComponent implements OnInit {
+
   private fb = inject(FormBuilder);
   private expenseService = inject(ExpenseService);
+  private categoryService = inject(CategoryService);
 
   expenses: Expense[] = [];
+  categories: Category[] = [];
 
   isEditing = false;
   editingExpenseId: number | null = null;
@@ -35,13 +44,16 @@ export class ExpenseComponent implements OnInit {
     title: ['', [Validators.required, Validators.maxLength(100)]],
     amount: [null as number | null, [Validators.required, Validators.min(0.01)]],
     description: [''],
-    expenseDate: ['', Validators.required]
+    expenseDate: ['', Validators.required],
+    categoryId: [null as number | null]
   });
 
   ngOnInit(): void {
     this.loadExpenses();
+    this.loadCategories();
   }
 
+  // Load all expenses
   loadExpenses(): void {
     this.isLoading = true;
     this.errorMessage = '';
@@ -59,6 +71,19 @@ export class ExpenseComponent implements OnInit {
     });
   }
 
+  // Load default and custom categories
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
+      next: (response) => {
+        this.categories = response;
+      },
+      error: () => {
+        this.errorMessage = 'Unable to load categories.';
+      }
+    });
+  }
+
+  // Add or update expense
   saveExpense(): void {
     this.successMessage = '';
     this.errorMessage = '';
@@ -75,7 +100,9 @@ export class ExpenseComponent implements OnInit {
       amount: Number(formValue.amount),
       description: formValue.description?.trim() || null,
       expenseDate: formValue.expenseDate!,
-      categoryId: null
+      categoryId: formValue.categoryId
+        ? Number(formValue.categoryId)
+        : null
     };
 
     this.isLoading = true;
@@ -112,6 +139,7 @@ export class ExpenseComponent implements OnInit {
     }
   }
 
+  // Edit existing expense
   editExpense(expense: Expense): void {
     this.isEditing = true;
     this.editingExpenseId = expense.id;
@@ -120,13 +148,15 @@ export class ExpenseComponent implements OnInit {
       title: expense.title,
       amount: expense.amount,
       description: expense.description || '',
-      expenseDate: expense.expenseDate.substring(0, 10)
+      expenseDate: expense.expenseDate.substring(0, 10),
+      categoryId: expense.categoryId ?? null
     });
 
     this.successMessage = '';
     this.errorMessage = '';
   }
 
+  // Delete expense
   deleteExpense(id: number): void {
     if (!confirm('Are you sure you want to delete this expense?')) {
       return;

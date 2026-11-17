@@ -1,4 +1,5 @@
-﻿using PersonalExpenseTracker.Api.DTOs.Expense;
+﻿
+using PersonalExpenseTracker.Api.DTOs.Expense;
 using PersonalExpenseTracker.Api.Models;
 using PersonalExpenseTracker.Api.Repositories.Interfaces;
 using PersonalExpenseTracker.Api.Services.Interfaces;
@@ -95,7 +96,8 @@ namespace PersonalExpenseTracker.Api.Services
                 Amount = expense.Amount,
                 Description = expense.Description,
                 ExpenseDate = expense.ExpenseDate,
-                CategoryId = expense.CategoryId
+                CategoryId = expense.CategoryId,
+                CategoryName = expense.Category?.Name
             };
         }
     }
