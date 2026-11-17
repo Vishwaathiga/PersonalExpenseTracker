@@ -1,0 +1,145 @@
+.expense-container {
+  min-height: 100vh;
+  padding: 30px 20px;
+  background: #f3f4f6;
+}
+
+.expense-card {
+  max-width: 850px;
+  margin: auto;
+  padding: 35px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+  color: #222;
+}
+
+h1, .subtitle {
+  text-align: center;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-top: 25px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.button-group, .expense-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+button {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background: #6b7280;
+}
+
+.delete-button {
+  background: #dc2626;
+}
+
+.success-message {
+  color: #15803d;
+  margin-bottom: 15px;
+}
+
+.error-message, .validation {
+  color: #dc2626;
+  margin-bottom: 15px;
+}
+
+.validation {
+  display: block;
+  margin-top: 5px;
+}
+
+.expense-list {
+  margin-top: 20px;
+}
+
+.expense-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 18px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.expense-details h3 {
+  margin: 0 0 8px;
+}
+
+.expense-details p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.expense-actions {
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .expense-card {
+    padding: 20px;
+  }
+
+  .expense-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .expense-actions {
+    justify-content: flex-start;
+  }
+}

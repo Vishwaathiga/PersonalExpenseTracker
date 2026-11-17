@@ -1,13 +1,15 @@
 
-using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PersonalExpenseTracker.Api.Data;
 using PersonalExpenseTracker.Api.Models;
+using PersonalExpenseTracker.Api.Repositories;
+using PersonalExpenseTracker.Api.Repositories.Interfaces;
 using PersonalExpenseTracker.Api.Services;
 using PersonalExpenseTracker.Api.Services.Interfaces;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +83,8 @@ builder.Services.AddCors(options =>
 // Register authentication service
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IProfileService, ProfileService>();
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
 // Register controllers and OpenAPI
 builder.Services.AddControllers();

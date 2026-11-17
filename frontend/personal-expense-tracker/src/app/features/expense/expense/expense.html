@@ -1,0 +1,115 @@
+<div class="expense-container">
+
+  <div class="expense-card">
+
+    <h1>Expense Management</h1>
+    <p class="subtitle">Manage your personal expenses</p>
+
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="errorMessage" class="error-message">
+      {{ errorMessage }}
+    </div>
+
+    <h2>{{ isEditing ? 'Edit Expense' : 'Add New Expense' }}</h2>
+
+    <form [formGroup]="expenseForm" (ngSubmit)="saveExpense()">
+
+      <div class="form-group">
+        <label>Expense Title</label>
+        <input type="text" formControlName="title"
+               placeholder="Enter expense title">
+
+        <small class="validation"
+          *ngIf="expenseForm.get('title')?.touched &&
+                 expenseForm.get('title')?.invalid">
+          Please enter a title (maximum 100 characters).
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" formControlName="amount"
+               placeholder="Enter amount">
+
+        <small class="validation"
+          *ngIf="expenseForm.get('amount')?.touched &&
+                 expenseForm.get('amount')?.invalid">
+          Please enter an amount greater than zero.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea formControlName="description"
+                  placeholder="Enter description"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Expense Date</label>
+        <input type="date" formControlName="expenseDate">
+
+        <small class="validation"
+          *ngIf="expenseForm.get('expenseDate')?.touched &&
+                 expenseForm.get('expenseDate')?.invalid">
+          Please select an expense date.
+        </small>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" [disabled]="isLoading">
+          {{ isLoading ? 'Please wait...' :
+             (isEditing ? 'Update Expense' : 'Add Expense') }}
+        </button>
+
+        <button type="button" class="cancel-button"
+                *ngIf="isEditing" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </div>
+
+    </form>
+
+    <hr>
+
+    <h2>My Expenses</h2>
+
+    <p *ngIf="isLoading">Loading expenses...</p>
+
+    <p *ngIf="!isLoading && expenses.length === 0">
+      No expenses found. Add your first expense!
+    </p>
+
+    <div class="expense-list" *ngIf="expenses.length > 0">
+
+      <div class="expense-item" *ngFor="let expense of expenses">
+
+        <div class="expense-details">
+          <h3>{{ expense.title }}</h3>
+          <p>{{ expense.description || 'No description' }}</p>
+          <small>{{ expense.expenseDate | date:'mediumDate' }}</small>
+        </div>
+
+        <div class="expense-actions">
+          <strong>{{ expense.amount | currency:'INR':'symbol' }}</strong>
+
+          <button type="button"
+                  (click)="editExpense(expense)">
+            Edit
+          </button>
+
+          <button type="button" class="delete-button"
+                  (click)="deleteExpense(expense.id)">
+            Delete
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

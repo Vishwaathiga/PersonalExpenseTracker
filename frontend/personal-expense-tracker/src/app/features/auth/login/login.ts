@@ -50,9 +50,10 @@ export class Login {
       password: password!
     }).subscribe({
       next: (response) => {
-        sessionStorage.setItem('token', response.token);
-        sessionStorage.setItem('fullName', response.fullName);
-        sessionStorage.setItem('email', response.email);
+      localStorage.setItem('token', response.token);
+
+sessionStorage.setItem('fullName', response.fullName);
+sessionStorage.setItem('email', response.email);
 
         this.successMessage = `Welcome, ${response.fullName}! Login successful.`;
         this.router.navigate(['/profile']);
