@@ -9,8 +9,20 @@ export interface RegisterRequest {
   password: string;
 }
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
 export interface AuthResponse {
   message: string;
+}
+
+export interface LoginResponse {
+  token: string;
+  expiresAt: string;
+  fullName: string;
+  email: string;
 }
 
 @Injectable({
@@ -19,12 +31,21 @@ export interface AuthResponse {
 export class Auth {
   private http = inject(HttpClient);
 
- private apiUrl = 'https://localhost:7082/api/auth';
+  private apiUrl = 'https://localhost:7082/api/auth';
 
   register(request: RegisterRequest): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(
       `${this.apiUrl}/register`,
       request
     );
+  }
+
+  login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.apiUrl}/login`,
+      request
+    );
+
+    
   }
 }

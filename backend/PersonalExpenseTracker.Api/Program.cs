@@ -1,6 +1,9 @@
 
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using PersonalExpenseTracker.Api.Data;
 using PersonalExpenseTracker.Api.Models;
 using PersonalExpenseTracker.Api.Services;
@@ -20,7 +23,51 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Read JWT configuration
+var jwtKey = builder.Configuration["Jwt:Key"];
+var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+var jwtAudience = builder.Configuration["Jwt:Audience"];
+
+if (string.IsNullOrWhiteSpace(jwtKey) ||
+    string.IsNullOrWhiteSpace(jwtIssuer) ||
+    string.IsNullOrWhiteSpace(jwtAudience))
+{
+    throw new InvalidOperationException(
+        "JWT configuration is missing.");
+}
+
+// Configure JWT authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+
+    options.DefaultChallengeScheme =
+        JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Convert.FromBase64String(jwtKey)),
+
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
+// Register authorization
 builder.Services.AddAuthorization();
+
+// Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular", policy =>
@@ -30,6 +77,8 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
+
+// Register authentication service
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Register controllers and OpenAPI
@@ -38,7 +87,6 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -47,6 +95,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("AllowAngular");
+
+// Authentication must run before authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
